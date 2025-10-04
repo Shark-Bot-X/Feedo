@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+// src/pages/Auth.tsx
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,38 +13,19 @@ const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [companyName, setCompanyName] = useState("");
-  const [companySize, setCompanySize] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [name, setName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  useEffect(() => {
-    // Check if user is already logged in
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        navigate("/dashboard");
-      }
-    });
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session && event === "SIGNED_IN") {
-        navigate("/dashboard");
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate]);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-
+    setIsLoading(true);
+    
     try {
       if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
+        // Sign in with Supabase
+        const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
@@ -55,46 +36,44 @@ const Auth = () => {
           title: "Welcome back!",
           description: "Logged in successfully.",
         });
+        
+        navigate("/dashboard");
       } else {
-        // Validate signup fields
-        if (!fullName || !companyName || !companySize) {
-          toast({
-            title: "Missing information",
-            description: "Please fill in all fields",
-            variant: "destructive",
-          });
-          setLoading(false);
-          return;
-        }
-
-        const { error } = await supabase.auth.signUp({
+        // Sign up with Supabase
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/dashboard`,
             data: {
-              full_name: fullName,
-              company_name: companyName,
-              company_size: companySize,
+              full_name: name,
             },
           },
         });
 
         if (error) throw error;
 
-        toast({
-          title: "Account created!",
-          description: "Welcome to Feedo.",
-        });
+        // Check if email confirmation is required
+        if (data.user && !data.session) {
+          toast({
+            title: "Check your email!",
+            description: "We sent you a confirmation link. Please verify your email to continue.",
+          });
+        } else {
+          toast({
+            title: "Account created!",
+            description: "Welcome to Feedo.",
+          });
+          navigate("/dashboard");
+        }
       }
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message || "An error occurred",
+        description: error.message || "Something went wrong. Please try again.",
         variant: "destructive",
       });
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -109,56 +88,26 @@ const Auth = () => {
           <CardHeader>
             <CardTitle>{isLogin ? "Welcome back" : "Create account"}</CardTitle>
             <CardDescription>
-              {isLogin
-                ? "Enter your credentials to access your dashboard"
+              {isLogin 
+                ? "Enter your credentials to access your dashboard" 
                 : "Start managing your feedback with AI-powered insights"}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               {!isLogin && (
-                <>
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Full Name</Label>
-                    <Input
-                      id="name"
-                      type="text"
-                      placeholder="John Doe"
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="company">Company Name</Label>
-                    <Input
-                      id="company"
-                      type="text"
-                      placeholder="Acme Inc."
-                      value={companyName}
-                      onChange={(e) => setCompanyName(e.target.value)}
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="company-size">Company Size</Label>
-                    <Select value={companySize} onValueChange={setCompanySize} required>
-                      <SelectTrigger id="company-size">
-                        <SelectValue placeholder="Select company size" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="1-10">1-10 employees</SelectItem>
-                        <SelectItem value="11-50">11-50 employees</SelectItem>
-                        <SelectItem value="51-200">51-200 employees</SelectItem>
-                        <SelectItem value="201-500">201-500 employees</SelectItem>
-                        <SelectItem value="501-1000">501-1000 employees</SelectItem>
-                        <SelectItem value="1000+">1000+ employees</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </>
+                <div className="space-y-2">
+                  <Label htmlFor="name">Full Name</Label>
+                  <Input
+                    id="name"
+                    type="text"
+                    placeholder="John Doe"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    disabled={isLoading}
+                  />
+                </div>
               )}
 
               <div className="space-y-2">
@@ -170,6 +119,7 @@ const Auth = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  disabled={isLoading}
                 />
               </div>
 
@@ -182,26 +132,33 @@ const Auth = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  disabled={isLoading}
                   minLength={6}
                 />
+                {!isLogin && (
+                  <p className="text-xs text-muted-foreground">
+                    Password must be at least 6 characters
+                  </p>
+                )}
               </div>
 
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Please wait..." : (isLogin ? "Log in" : "Create account")}
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? "Please wait..." : (isLogin ? "Sign in" : "Create account")}
               </Button>
-
-              <div className="text-center text-sm">
-                <button
-                  type="button"
-                  onClick={() => setIsLogin(!isLogin)}
-                  className="text-primary hover:underline"
-                >
-                  {isLogin
-                    ? "Don't have an account? Sign up"
-                    : "Already have an account? Log in"}
-                </button>
-              </div>
             </form>
+
+            <div className="mt-6 text-center">
+              <button
+                type="button"
+                onClick={() => setIsLogin(!isLogin)}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                disabled={isLoading}
+              >
+                {isLogin 
+                  ? "Don't have an account? Sign up" 
+                  : "Already have an account? Sign in"}
+              </button>
+            </div>
           </CardContent>
         </Card>
       </div>

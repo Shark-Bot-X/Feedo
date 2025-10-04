@@ -6,6 +6,13 @@ import Logo from "@/components/Logo";
 const Landing = () => {
   const navigate = useNavigate();
 
+  const scrollToFeatures = () => {
+    const featuresSection = document.getElementById('features');
+    if (featuresSection) {
+      featuresSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -14,15 +21,24 @@ const Landing = () => {
           <Logo />
 
           <nav className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-foreground/70 hover:text-foreground transition-colors">
+            <button 
+              onClick={scrollToFeatures}
+              className="text-foreground/70 hover:text-foreground transition-colors"
+            >
               Features
-            </a>
-            <a href="#how-it-works" className="text-foreground/70 hover:text-foreground transition-colors">
+            </button>
+            <button 
+              onClick={() => window.location.href = "https://youtu.be/Zv7UoUMwdMM"}
+              className="text-foreground/70 hover:text-foreground transition-colors"
+            >
               How it works
-            </a>
-            <a href="#pricing" className="text-foreground/70 hover:text-foreground transition-colors">
+            </button>
+            <button 
+              onClick={() => navigate("/pricing")}
+              className="text-foreground/70 hover:text-foreground transition-colors"
+            >
               Pricing
-            </a>
+            </button>
           </nav>
 
           <div className="flex items-center gap-4">
@@ -68,6 +84,7 @@ const Landing = () => {
               size="lg"
               variant="outline"
               className="text-lg px-8"
+              onClick={() => window.location.href = "https://youtu.be/Zv7UoUMwdMM"}
             >
               Watch demo
             </Button>
@@ -79,7 +96,7 @@ const Landing = () => {
         </section>
 
         {/* Features Preview */}
-        <section className="py-20 grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <section id="features" className="py-20 grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           <div className="p-8 rounded-2xl bg-card border border-border hover:shadow-lg transition-shadow">
             <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
               <FileText className="w-6 h-6 text-primary" />
