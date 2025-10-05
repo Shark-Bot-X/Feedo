@@ -1,0 +1,26 @@
+FEEDBACK_ID,feedback_text,TASK
+FB001,"The app crashes every time I try to upload a file. This is blocking my work and urgent!",not_completed
+FB002,"I love this product! It's made my workflow so much easier. Great job team!",completed
+FB003,"Would be great if you could add dark mode feature. Many users have been requesting this.",not_completed
+FB004,"The loading time is extremely slow. Takes forever to load the dashboard.",not_completed
+FB005,"Your pricing is too expensive compared to competitors like Slack and Asana.",not_completed
+FB006,"The interface is very confusing and hard to navigate. Too many clicks to do simple tasks.",not_completed
+FB007,"Customer support team was very helpful and resolved my issue quickly. Thank you!",completed
+FB008,"I'm concerned about data privacy. How is my information being encrypted and stored?",not_completed
+FB009,"App is not working at all. Critical bug that needs immediate attention!",not_completed
+FB010,"The new update is fantastic! Performance has improved significantly.",completed
+FB011,"Missing integration with Google Calendar. This feature would be really useful.",not_completed
+FB012,"UI design is cluttered and difficult to use. Needs better layout.",not_completed
+FB013,"Your tool is much better than Trello. Switched last month and very happy.",completed
+FB014,"Page freezes when I try to export reports. Happens every time.",not_completed
+FB015,"Would love to see more customization options for the dashboard.",not_completed
+FB016,"Support team never responds to my tickets. Been waiting for 3 days!",not_completed
+FB017,"The free plan doesn't offer enough value. Need more features.",not_completed
+FB018,"Worried about security vulnerabilities after recent data breaches in the news.",not_completed
+FB019,"App is amazing! Makes collaboration so easy. Highly recommend.",completed
+FB020,"Need a mobile app urgently. Only desktop version is limiting.",not_completed
+FB021,"System hangs when processing large files. Very frustrating and slows down work.",ongoing
+FB022,"Please add ability to export data in multiple formats like PDF and Excel.",not_completed
+FB023,"Love the new dark theme! Looks professional and easy on the eyes.",completed
+FB024,"Getting timeout errors frequently. Need this fixed ASAP.",not_completed
+FB025,"The onboarding process was smooth and helpful. Great experience!",completed

@@ -91,7 +91,7 @@ const Landing = () => {
           </div>
 
           <p className="text-sm text-muted-foreground">
-            No credit card required · 14-day free trial · Cancel anytime
+            No credit card required · Cancel anytime
           </p>
         </section>
 
