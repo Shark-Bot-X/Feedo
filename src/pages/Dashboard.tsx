@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Upload, Search, X, Loader2, Edit, Trash2, PlusCircle, Save } from "lucide-react";
-
+import { API_ENDPOINTS } from "@/config/api";
 // --- MOCKING MISSING DEPENDENCIES (As provided by the user) ---
 // This pattern guarantees the state object is initialized only ONCE
 (function() {
@@ -51,8 +51,6 @@ const useFeedback = () => {
 };
 // --- END: MOCKING MISSING DEPENDENCIES ---
 
-// IMPORTANT: Define your Flask API URL here.
-const API_URL = "http://localhost:5000/api/analyze-csv";
 
 // --- NEW COMPONENT: Editable Data Table ---
 
@@ -277,11 +275,10 @@ const Dashboard = () => {
             const formData = new FormData();
             formData.append('file', file);
 
-            const response = await fetch(API_URL, {
+            const response = await fetch(API_ENDPOINTS.ANALYZE_CSV, {
                 method: 'POST',
                 body: formData,
             });
-
             const result = await response.json();
 
             if (response.ok && result.success) {
@@ -296,7 +293,7 @@ const Dashboard = () => {
             }
         } catch (error) {
             console.error("Fetch Error:", error);
-            toast({ title: "Network Error", description: "Could not connect to the feedback processor API. Ensure the Flask server is running on http://localhost:5000.", variant: "destructive" });
+            toast({ title: "Network Error", description: "Could not connect to the feedback processor API. Ensure the Flask server is running .", variant: "destructive" });
             setFeedbackData([], null);
         } finally {
             setIsUploading(false);

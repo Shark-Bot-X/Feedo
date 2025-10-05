@@ -5,14 +5,24 @@ require('dotenv').config();
 
 const app = express();
 
-// server.js (Required Fix)
-// ...
-// Enable CORS for your React app
+// CORS configuration - Allow all origins in production, specific in dev
+const allowedOrigins = process.env.NODE_ENV === 'production' 
+  ? [process.env.FRONTEND_URL, 'https://feedo-frontend.onrender.com']
+  : ['http://localhost:8080', 'http://localhost:5173'];
+
 app.use(cors({
-  origin: 'http://localhost:8080', // <-- FIX: Changed port from 3000 to 8080
-  credentials: true
+  origin: function(origin, callback) {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production') {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
 }));
-// ...
 
 app.use(express.json());
 
@@ -20,7 +30,8 @@ app.use(express.json());
 app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'OK', 
-    geminiConfigured: !!process.env.GEMINI_API_KEY 
+    geminiConfigured: !!process.env.GEMINI_API_KEY,
+    environment: process.env.NODE_ENV || 'development'
   });
 });
 
@@ -32,7 +43,7 @@ app.post('/api/gemini/chat', async (req, res) => {
     console.log('📩 Received request:', req.body);
 
     if (!process.env.GEMINI_API_KEY) {
-      throw new Error('GEMINI_API_KEY not configured in .env file');
+      throw new Error('GEMINI_API_KEY not configured');
     }
 
     const { question, feedbackData } = req.body;
@@ -42,11 +53,8 @@ app.post('/api/gemini/chat', async (req, res) => {
     }
 
     // Get the Gemini model
-// server.js (Required Fix)
-// ...
-// Get the Gemini model
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' }); // <-- FIX: Use a current model
-// ...
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
+    
     // Create prompt with feedback data
     const prompt = `You are an AI feedback analyst assistant. Here is the feedback data:
 
@@ -87,8 +95,9 @@ Provide a helpful, detailed, and actionable answer based on the feedback data. B
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log('🚀 ===============================================');
-  console.log(`🚀 Gemini API Server running on http://localhost:${PORT}`);
+  console.log(`🚀 Gemini API Server running on port ${PORT}`);
   console.log(`✅ API Key configured: ${process.env.GEMINI_API_KEY ? 'YES ✓' : 'NO ✗'}`);
   console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);
+  console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log('🚀 ===============================================');
 });

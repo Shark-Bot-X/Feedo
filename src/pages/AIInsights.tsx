@@ -25,7 +25,7 @@ import {
   Undo,
   Download,
 } from "lucide-react";
-
+import { API_ENDPOINTS } from "@/config/api";
 // --- START: PERSISTENT GLOBAL STATE GUARANTEE ---
 (function () {
   if (typeof window.__FEEDBACK_APP_STATE === "undefined") {
@@ -174,8 +174,7 @@ const AIInsights = () => {
     };
   }, [feedbackList]);
 
-  // Function to call Gemini API
-  const callGeminiAPI = async (userQuestion) => {
+const callGeminiAPI = async (userQuestion) => {
     if (preparedFeedbackContext.totalCount === 0) {
       throw new Error(
         "Cannot run AI analysis. Please upload a feedback CSV file first."
@@ -184,11 +183,10 @@ const AIInsights = () => {
 
     try {
       const feedbackContext = preparedFeedbackContext.context;
-      const API_URL = "http://localhost:3001";
 
-      console.log("🔗 Connecting to:", `${API_URL}/api/gemini/chat`);
+      console.log("🔗 Connecting to:", API_ENDPOINTS.GEMINI_CHAT);
 
-      const response = await fetch(`${API_URL}/api/gemini/chat`, {
+      const response = await fetch(API_ENDPOINTS.GEMINI_CHAT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -201,7 +199,7 @@ const AIInsights = () => {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(
           errorData.message ||
-            `API Error: ${response.status} - Make sure backend is running on port 3001`
+            `API Error: ${response.status} - Backend connection failed`
         );
       }
 
@@ -214,7 +212,7 @@ const AIInsights = () => {
         error.message.includes("NetworkError")
       ) {
         throw new Error(
-          "Cannot connect to backend server. Please make sure the backend is running on http://localhost:3001."
+          "Cannot connect to backend server. Please check your network connection."
         );
       }
       throw error;
@@ -452,7 +450,7 @@ const AIInsights = () => {
               <div className="mt-3 text-xs text-red-600 dark:text-red-400 space-y-1">
                 <p className="font-semibold">Setup Checklist:</p>
                 <ul className="list-disc list-inside space-y-1 ml-2">
-                  <li>Backend server running on http://localhost:3001</li>
+                  <li>Backend server running</li>
                   <li>GEMINI_API_KEY set in backend/.env file</li>
                   <li>Dependencies installed: npm install</li>
                   <li>CORS enabled for your frontend URL</li>

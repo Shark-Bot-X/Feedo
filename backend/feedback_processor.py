@@ -265,7 +265,11 @@ def get_keywords():
 
 
 if __name__ == "__main__":
+    # Get port from environment (Render provides this)
+    port = int(os.environ.get('PORT', 5000))
+    
     print("🚀 Feedback Processor API starting...")
-    print("📡 Server running on http://localhost:5000")
-    print("🔗 React frontend should connect to this server")
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    print(f"📡 Server running on port {port}")
+    
+    # IMPORTANT: Set debug=False for production
+    app.run(host="0.0.0.0", port=port, debug=False)
