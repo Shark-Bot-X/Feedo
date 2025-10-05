@@ -30,7 +30,7 @@ services:
 
   # React Frontend (Static Site)
   - type: web
-    name: feedo-frontend
+    name: feedo-frontend 
     env: static
     buildCommand: "npm install && npm run build"
     staticPublishPath: ./dist
