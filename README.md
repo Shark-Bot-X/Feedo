@@ -219,7 +219,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 <div align="center">
 
-**Made with ❤️ by Shark-Bot-X**
+**Made with ❤️ by Sharky**
 
 [Report Bug](https://github.com/Shark-Bot-X/Feedo/issues) · [Request Feature](https://github.com/Shark-Bot-X/Feedo/issues)
 
