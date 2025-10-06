@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { FileText } from "lucide-react";
+import { FileText, Sparkles } from "lucide-react";
 import Logo from "@/components/Logo";
 
 const Landing = () => {
@@ -58,9 +58,12 @@ const Landing = () => {
       {/* Hero Section */}
       <main className="container mx-auto px-6">
         <section className="py-20 text-center max-w-5xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm mb-8">
-            <span className="w-2 h-2 bg-primary rounded-full"></span>
-            Now with AI-powered insights
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-primary/15 via-primary/10 to-primary/15 border border-primary/20 text-primary text-sm font-medium mb-8 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 group backdrop-blur-sm">
+            <Sparkles className="w-4 h-4 animate-pulse" />
+            <span className="relative">
+              Now with AI-powered insights
+              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></span>
+            </span>
           </div>
 
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6 leading-tight">
