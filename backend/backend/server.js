@@ -53,7 +53,7 @@ app.post('/api/gemini/chat', async (req, res) => {
     }
 
     // Get the Gemini model
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
     
     // Create prompt with feedback data
     const prompt = `You are an AI feedback analyst assistant. Here is the feedback data:
